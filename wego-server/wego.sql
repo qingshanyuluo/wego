@@ -25,7 +25,7 @@ CREATE TABLE `student`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `class` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `clazz` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `student_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `qq_number` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `email` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
