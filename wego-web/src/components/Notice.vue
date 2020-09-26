@@ -1,16 +1,16 @@
 <template>
   <div>
-    <el-container  style="height: 100%;">
-      <el-header >
-        <img src="../assets/logo.jpg" class="logo" alt="">
+    <el-container>
+      <el-header>
+        <img src="../assets/logo.jpg" class="logo" alt="" style="padding-left: 0">
         <el-menu :default-active="activeIndex" class="nav" mode="horizontal" @select="handleSelect">
           <el-menu-item index="1" @click="toRegister" style="color: #666666; font-size: 1rem; padding: 0 0.5rem">
             报名
           </el-menu-item>
-          <el-menu-item index="2" @click="toNotice" style="font-size: 1rem; padding: 0 0.5rem">
+          <el-menu-item index="2" style="font-size: 1rem; padding: 0 0.5rem">
             通知
           </el-menu-item>
-          <el-menu-item index="3" style="float: right; color: #666666; font-size: 1rem; padding: 0 0.5rem" @click="toAbout">
+          <el-menu-item index="3" style="float: right; color: #666666; font-size: 1rem; padding: 0 0.5rem;" @click="toAbout">
             关于
           </el-menu-item>
         </el-menu>
@@ -22,7 +22,8 @@
           </el-col>
           <el-col :xs="24" :sm="20" :md="18" :lg="18" :xl="18">
             <el-card class="r-card">
-              <h1>报名成功！欢迎加入WeGo！</h1>
+              <h1>通知1</h1>
+              <p>登录功能开发中，网站功能持续更新，请关注</p>
             </el-card>
           </el-col>
           <el-col :xs="0" :sm="2" :md="3" :lg="3" :xl="3">
@@ -39,10 +40,10 @@
 
 <script>
 export default {
-  name: "welcome",
-  data () {
+  name: "notice",
+    data () {
     return {
-      activeIndex: '10',
+      activeIndex: '2',
     }
   },
   methods: {
@@ -54,10 +55,7 @@ export default {
     },
     toAbout() {
       this.$router.push("/about");
-    },
-    toNotice() {
-      this.$router.push("/notice");
-    },
+    }
   }
 }
 </script>
@@ -82,7 +80,7 @@ export default {
 
 .el-main {
   background-image: linear-gradient(to top, rgba(255, 241, 235, 1) 0%, rgba(172, 225, 249, 1) 100%);
-  min-height: 100%;
+  min-height: 800px;
   height: auto;
 }
 

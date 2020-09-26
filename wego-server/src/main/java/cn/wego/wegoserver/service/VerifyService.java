@@ -1,8 +1,7 @@
 package cn.wego.wegoserver.service;
 
 import cn.wego.wegoserver.entity.VerificationCode;
-import com.sun.deploy.net.HttpResponse;
-import org.springframework.http.HttpRequest;
+
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;

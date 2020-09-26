@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view  style="height: 100%"></router-view>
   </div>
 </template>
 
 <script>
 import Register from './components/Register.vue'
+import Notice from "@/components/Notice";
 import Welcome from "@/components/Welcome";
+import About from "@/components/About";
 
 function remove() {
   let Loading = document.getElementById("Loading");
@@ -16,15 +18,13 @@ function remove() {
 export default {
   name: 'app',
   created() {
-    let Loading = document.getElementById("Loading");
-    if (Loading != null) {
-      //调整加载时间
-      setTimeout(remove, 1000)
-    }
+      setTimeout(remove, 0)
   },
   components: {
     Register,
-    Welcome
+    Notice,
+    Welcome,
+    About
   },
   methods: {
 

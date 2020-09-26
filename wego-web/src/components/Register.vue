@@ -4,30 +4,15 @@
         <el-header>
           <img src="../assets/logo.jpg" class="logo" alt="">
           <el-menu :default-active="activeIndex" class="nav" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">报名</el-menu-item>
-            <el-menu-item index="2" @click="toNotice" style="color: #666666">
+            <el-menu-item index="1" style="font-size: 1rem; padding: 0 0.5rem">报名</el-menu-item>
+            <el-menu-item index="2" @click="toNotice" style="color: #666666; font-size: 1rem; padding: 0 0.5rem">
               通知
+            </el-menu-item>
+            <el-menu-item index="3" style="float: right; color: #666666; font-size: 1rem; padding: 0 0.5rem" @click="toAbout">
+              关于
             </el-menu-item>
           </el-menu>
         </el-header>
-        <transition name="el-fade-in">
-          <div class="r-mask" v-show="show">
-            <div class="r-mask-main">
-              <el-row>
-                <el-col :xs="0" :sm="2" :md="8" :lg="8" :xl="8">
-                  <div class="grid-content"></div>
-                </el-col>
-                <el-col :xs="24" :sm="20" :md="8" :lg="8" :xl="8">
-                  <img src="../assets/mask-img.png" class="r-mask-img">
-                  <el-button @click="show = !show" class="r-mask-btn" type="primary" size="small">点击进入</el-button>
-                </el-col>
-                <el-col :xs="0" :sm="2" :md="8" :lg="8" :xl="8">
-                  <div class="grid-content"></div>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-        </transition>
         <el-main>
           <el-row :gutter="20">
             <el-col :xs="0" :sm="2" :md="3" :lg="3" :xl="3">
@@ -65,12 +50,12 @@
                       <el-col :xs="10" :sm="10" :md="6" :lg="4" :xl="4" style="margin-left: -10px">
                         <el-input v-model="applyForm.verification_code"></el-input>
                       </el-col>
-                      <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+                      <el-col :xs="1" :sm="1" :md="4" :lg="4" :xl="4">
                         <div></div>
                       </el-col>
-                      <el-col :xs="10" :sm="10" :md="14" :lg="16" :xl="16" style="height: 40px">
-                        <img :src="verify_code" style="float: left; height: 100%" alt="">
-                        <el-button type="text" @click="reVerify" style="margin-left: 2px; position: absolute">看不清</el-button>
+                      <el-col :xs="13" :sm="13" :md="14" :lg="16" :xl="16" style="height: 40px">
+                        <img :src="verify_code" style="float: left; height: 100%" alt="" @click="reVerify">
+<!--                        <el-button type="text" @click="reVerify" style="margin-left: 2px; position: absolute">看不清</el-button>-->
                       </el-col>
                     </el-form-item>
                     <el-form-item>
@@ -85,7 +70,7 @@
             </el-col>
           </el-row>
         </el-main>
-        <el-footer>
+        <el-footer style="color: #666666">
           ©2020 - 天津工业大学 WeGo 社团
         </el-footer>
       </el-container>
@@ -100,7 +85,7 @@ export default {
       params: '',
       responseType: 'blob' // 必须说明 axios 请求类型
     }).then((res) => {
-      this.verification_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
+      this.verify_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
     }).catch(() => {
       // this.setState({
       //   imgCodeUrl: require('@/assets/imageFail.png') // 默认图片
@@ -179,26 +164,44 @@ export default {
       console.log(key, keyPath);
     },
     toNotice() {
-      this.$router.push("/welcome");
+      this.$router.push("/notice");
+    },
+    toAbout() {
+      this.$router.push("/about");
     },
     submitForm(formName) {
-      // this.$router.push("/welcome");
       this.$refs[formName].validate(async (valid) => {
         if (!valid) return;
         await this.$http
             .post("/register", this.applyForm)
             .then(res => {
-              if (res.status.code === 500) {
-                this.$message.error("111")
-
-                console.log(res.status.message);
+              console.log(res);
+              if (res.data.code === 500) {
+                this.$alert(res.data.message + '如有疑问，请联系新生群管理员。', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.reVerify()
+                  }
+                });
+                // console.log(res.data.message);
                 // this.$router.push("/welcome");
-              } else if (res.data.status === 200) {
-                console.log(res.status.message);
+              } else if (res.data.code === 200) {
+                this.$alert(res.data.message, '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push("/welcome");
+                  }
+                });
               }
             })
             .catch(err => {
               console.log(err);
+              this.$alert('出现未知错误，请联系新生群管理员。', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.reVerify()
+                }
+              });
             });
       });
     },
@@ -210,7 +213,7 @@ export default {
         params: '',
         responseType: 'blob' // 必须说明 axios 请求类型
       }).then((res) => {
-        this.verification_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
+        this.verify_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
       }).catch(() => {
         // this.setState({
         //   imgCodeUrl: require('@/assets/imageFail.png') // 默认图片
@@ -224,7 +227,6 @@ export default {
 <style scoped>
 .el-header {
   line-height: 60px;
-  background: rgba(172, 225, 249, 1);
   color: white;
   font-size: 20px;
   display: flex;
@@ -236,7 +238,7 @@ export default {
 }
 
 .nav {
-  background: rgba(172, 225, 249, 1);
+  width: 100%;
 }
 
 .el-main {
@@ -258,9 +260,9 @@ export default {
   border-radius: 4px;
 }
 
-.r-mask {
+#r-mask {
   position: absolute;
-  height: 100%;
+  height: 2000px;
   width: 100%;
   z-index: 10;
   margin-top: 60px;
