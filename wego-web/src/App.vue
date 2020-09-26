@@ -19,7 +19,7 @@ export default {
     let Loading = document.getElementById("Loading");
     if (Loading != null) {
       //调整加载时间
-      setTimeout(remove, 1200)
+      setTimeout(remove, 1000)
     }
   },
   components: {

@@ -1,22 +1,40 @@
 <template>
   <div>
-    <div>
       <el-container>
-<!--        <el-header>-->
-          <el-menu :default-active="activeIndex" class="nav">
-            <el-menu-item index="1">
-              <img src="../assets/logo.jpg" class="logo">
-              WeGo报名页
+        <el-header>
+          <img src="../assets/logo.jpg" class="logo" alt="">
+          <el-menu :default-active="activeIndex" class="nav" mode="horizontal" @select="handleSelect">
+            <el-menu-item index="1">报名</el-menu-item>
+            <el-menu-item index="2" @click="toNotice" style="color: #666666">
+              通知
             </el-menu-item>
           </el-menu>
-<!--        </el-header>-->
+        </el-header>
+        <transition name="el-fade-in">
+          <div class="r-mask" v-show="show">
+            <div class="r-mask-main">
+              <el-row>
+                <el-col :xs="0" :sm="2" :md="8" :lg="8" :xl="8">
+                  <div class="grid-content"></div>
+                </el-col>
+                <el-col :xs="24" :sm="20" :md="8" :lg="8" :xl="8">
+                  <img src="../assets/mask-img.png" class="r-mask-img">
+                  <el-button @click="show = !show" class="r-mask-btn" type="primary" size="small">点击进入</el-button>
+                </el-col>
+                <el-col :xs="0" :sm="2" :md="8" :lg="8" :xl="8">
+                  <div class="grid-content"></div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+        </transition>
         <el-main>
           <el-row :gutter="20">
             <el-col :xs="0" :sm="2" :md="3" :lg="3" :xl="3">
               <div class="grid-content"></div>
             </el-col>
             <el-col :xs="24" :sm="20" :md="18" :lg="18" :xl="18">
-              <el-card class="m-card">
+              <el-card class="r-card">
                 <div class="grid-content">
                   <el-form :model="applyForm" :rules="rules" ref="applyForm" label-width="100px" label-position="top">
                     <el-form-item label="姓名" prop="name">
@@ -26,10 +44,10 @@
                       <el-input v-model="applyForm.student_id" placeholder="请输入个人学号"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
-                      <el-input type="password" v-model="applyForm.password" placeholder="请输入登录密码"></el-input>
+                      <el-input type="password" v-model="applyForm.password" placeholder="请输入登录密码" auto-complete="new-password"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码" prop="check_password">
-                      <el-input type="password" v-model="applyForm.check_password" placeholder="请再次输入确认登录密码"></el-input>
+                      <el-input type="password" v-model="applyForm.check_password" placeholder="请再次输入确认登录密码" auto-complete="new-password"></el-input>
                     </el-form-item>
                     <el-form-item label="专业班级（如：计科2xxx）" prop="clazz">
                       <el-input v-model="applyForm.clazz" placeholder="请输入专业班级"></el-input>
@@ -51,7 +69,7 @@
                         <div></div>
                       </el-col>
                       <el-col :xs="10" :sm="10" :md="14" :lg="16" :xl="16" style="height: 40px">
-                        <img :src="verify_code" style="float: left; height: 100%">
+                        <img :src="verify_code" style="float: left; height: 100%" alt="">
                         <el-button type="text" @click="reVerify" style="margin-left: 2px; position: absolute">看不清</el-button>
                       </el-col>
                     </el-form-item>
@@ -71,8 +89,6 @@
           ©2020 - 天津工业大学 WeGo 社团
         </el-footer>
       </el-container>
-    </div>
-
   </div>
 </template>
 
@@ -84,8 +100,7 @@ export default {
       params: '',
       responseType: 'blob' // 必须说明 axios 请求类型
     }).then((res) => {
-      const src = window.URL.createObjectURL(res.data) // 后端返回前端渲染
-      this.verification_code = src;
+      this.verification_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
     }).catch(() => {
       // this.setState({
       //   imgCodeUrl: require('@/assets/imageFail.png') // 默认图片
@@ -114,6 +129,7 @@ export default {
       }
     };
     return {
+      show: true,
       activeIndex: '1',
       verify_code: '/img/logo.30f51a04.jpg',
       applyForm: {
@@ -159,18 +175,26 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    toNotice() {
       this.$router.push("/welcome");
+    },
+    submitForm(formName) {
+      // this.$router.push("/welcome");
       this.$refs[formName].validate(async (valid) => {
         if (!valid) return;
         await this.$http
             .post("/register", this.applyForm)
             .then(res => {
-              if (res.data.code === 200) {
-                console.log(res.data.message);
+              if (res.status.code === 500) {
+                this.$message.error("111")
+
+                console.log(res.status.message);
                 // this.$router.push("/welcome");
-              } else if (res.data.code === 500) {
-                console.log(res.data.message);
+              } else if (res.data.status === 200) {
+                console.log(res.status.message);
               }
             })
             .catch(err => {
@@ -186,8 +210,7 @@ export default {
         params: '',
         responseType: 'blob' // 必须说明 axios 请求类型
       }).then((res) => {
-        const src = window.URL.createObjectURL(res.data) // 后端返回前端渲染
-        this.verification_code = src;
+        this.verification_code = window.URL.createObjectURL(res.data); // 后端返回前端渲染
       }).catch(() => {
         // this.setState({
         //   imgCodeUrl: require('@/assets/imageFail.png') // 默认图片
@@ -199,14 +222,17 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  height: 98%;
-}
-
 .el-header {
   line-height: 60px;
-  /*background: rgba(172, 225, 249, 1);*/
-  /*background-image: linear-gradient(to left, rgba(255, 241, 235, 0.88) 0%, rgba(172, 225, 249, 0.88) 100%);*/
+  background: rgba(172, 225, 249, 1);
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-content: center;
+}
+
+.logo {
+  height: 98%;
 }
 
 .nav {
@@ -215,7 +241,7 @@ export default {
 
 .el-main {
   background-image: linear-gradient(to top, rgba(255, 241, 235, 1) 0%, rgba(172, 225, 249, 1) 100%);
-  height: 1000px;
+  height: 100%;
 }
 
 .el-footer {
@@ -232,7 +258,30 @@ export default {
   border-radius: 4px;
 }
 
-.m-card {
+.r-mask {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  margin-top: 60px;
+  text-align: center;
+  background-image: linear-gradient(to top, rgba(255, 241, 235, 1) 0%, rgba(172, 225, 249, 1) 100%)
+}
+
+.r-mask-main {
+  margin-top: 8%;
+}
+
+.r-mask-img {
+  width: 100%;
+}
+
+.r-mask-btn {
+  margin: 0 auto;
+  display: block;
+}
+
+.r-card {
   margin-top: 5%;
   padding: 40px;
   background-color: rgba(249, 250, 252, 0.90);
