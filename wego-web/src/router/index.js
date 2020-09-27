@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Register from '../components/Register'
-import Welcome from "@/components/Welcome";
-import Notice from "@/components/Notice";
-import About from "@/components/About";
+// import Welcome from "@/components/Welcome";
+// import Notice from "@/components/Notice";
+// import About from "@/components/About";
+
+// const Register = () => import('../components/Register');
+const Welcome = () => import('../components/Welcome');
+const Notice = () => import('../components/Notice');
+const About = () => import('../components/About');
+
 
 Vue.use(VueRouter)
 

@@ -1,3 +1,5 @@
+const CompressionPlugin = require('compression-webpack-plugin');
+
 module.exports = {
   devServer: {
     open: true,
@@ -14,7 +16,18 @@ module.exports = {
         //   '^/api': ''//请求的时候使用这个api就可以
         // }
       }
-
+    }
+  },
+  configureWebpack: config => {
+    if(process.env.NODE_ENV === 'production'){
+      return {
+        plugins: [new CompressionPlugin({
+          test: /\.js$|\.html$|\.css/,
+          threshold: 10240,
+          deleteOriginalAssets: false
+        })]
+      }
     }
   }
+
 }
